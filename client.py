@@ -33,7 +33,6 @@ class ChatController:
         print('create data: ' + data)
 
 
-websocket.enableTrace(True)
 connector = ClientConnector({
     "/chats/list": ChatController.list,
     "/chats/create": ChatController.create
