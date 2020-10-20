@@ -7,40 +7,38 @@ import json
 
 
 class ClientConnector:
-    def __init__(self):
+    def __init__(self, roures):
         self.ws = websocket.WebSocketApp("ws://localhost:8765", on_message=self.on_message)
-        self.routes = {}
+        self.routes = roures
 
     def on_message(self, message):
         message = json.loads(message)
-        if message['url'] and self.routes[message['url']]:
-            self.routes[message['url']]()
+        if message['url'] and message['data'] and self.routes[message['url']]:
+            self.routes[message['url']](message['data'])
 
     def send(self, url, msg):
-        self.ws.send(json.dumps({"url": url, "msg": msg}))
+        self.ws.send(json.dumps({"url": url, "data": msg}))
 
-    def run2(self):
+    def run(self):
         thread.start_new_thread(lambda: self.ws.run_forever(), ())
 
 
 class ChatController:
-    def __init__(self, connector):
-        self.connector = connector
+    @staticmethod
+    def list(data):
+        print('list data: ' + data)
 
-    def list(self):
-        self.connector.send('/chats/list', [1, 2, 3])
-
-    def create(self):
-        self.connector.send('/chats/create', 'ok')
+    @staticmethod
+    def create(data):
+        print('create data: ' + data)
 
 
 websocket.enableTrace(True)
-c = ClientConnector()
-chatController = ChatController(c)
-c.routes = {
-    "/chats/list": chatController.list,
-    "/chats/create": chatController.create
-}
-c.run2()
+connector = ClientConnector({
+    "/chats/list": ChatController.list,
+    "/chats/create": ChatController.create
+})
+connector.run()
+
 while True:
-    c.send('/chats/list', input())
+    connector.send('/chats/list', input())
