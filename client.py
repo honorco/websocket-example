@@ -12,9 +12,10 @@ class ClientConnector:
         self.routes = roures
 
     def on_message(self, message):
+        print(message)
         message = json.loads(message)
         if message['url'] and message['data'] and self.routes[message['url']]:
-            self.routes[message['url']](message['data'])
+            self.routes[message['url']](self, message['data'])
 
     def send(self, url, msg):
         self.ws.send(json.dumps({"url": url, "data": msg}))
@@ -25,19 +26,14 @@ class ClientConnector:
 
 class ChatController:
     @staticmethod
-    def list(data):
-        print('list data: ' + data)
-
-    @staticmethod
-    def create(data):
-        print('create data: ' + data)
+    def create(self, data):
+        print(data)
 
 
 connector = ClientConnector({
-    "/chats/list": ChatController.list,
-    "/chats/create": ChatController.create
+    "/messages/create": ChatController.create,
 })
 connector.run()
 
 while True:
-    connector.send('/chats/list', input())
+    connector.send('/messages/create', input())
