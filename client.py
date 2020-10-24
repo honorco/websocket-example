@@ -24,14 +24,14 @@ class ClientConnector:
         thread.start_new_thread(lambda: self.ws.run_forever(), ())
 
 
-class ChatController:
+class MessageController:
     @staticmethod
     def create(self, data):
         print(data)
 
 
 connector = ClientConnector({
-    "/messages/create": ChatController.create,
+    "/messages/create": MessageController.create,
 })
 connector.run()
 
