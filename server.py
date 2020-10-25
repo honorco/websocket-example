@@ -46,7 +46,7 @@ class ServerConnector(tornado.websocket.WebSocketHandler, ABC):
 def initServer():
     asyncio.set_event_loop(asyncio.new_event_loop())
     application = tornado.web.Application([(r"/", ServerConnector)])
-    application.listen(8765, '127.0.0.1')
+    application.listen(8765, '0.0.0.0')
     try:
         loop = tornado.ioloop.IOLoop.current()
         loop.start()

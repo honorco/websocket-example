@@ -7,9 +7,10 @@ import json
 
 
 class ClientConnector:
-    def __init__(self, roures):
-        self.ws = websocket.WebSocketApp("ws://localhost:8765", on_message=self.on_message)
-        self.routes = roures
+    def __init__(self, url, port, routes):
+        self.routes = routes
+        self.ws = websocket.WebSocketApp(f"ws://{url}:{port}", on_message=self.on_message)
+        thread.start_new_thread(lambda: self.ws.run_forever(), ())
 
     def on_message(self, message):
         print(message)
@@ -20,9 +21,6 @@ class ClientConnector:
     def send(self, url, msg):
         self.ws.send(json.dumps({"url": url, "data": msg}))
 
-    def run(self):
-        thread.start_new_thread(lambda: self.ws.run_forever(), ())
-
 
 class MessageController:
     @staticmethod
@@ -30,10 +28,9 @@ class MessageController:
         print(data)
 
 
-connector = ClientConnector({
+connector = ClientConnector('localhost', 8765, {
     "/messages/create": MessageController.create,
 })
-connector.run()
 
 while True:
     connector.send('/messages/create', input())
