@@ -1,7 +1,7 @@
 # websocket-example
 Инструкция:
 1. Запустить server.py, программа должна зависнуть
-2. Запустить client.py
+2. Запустить client.py в терминале: _python client.py_
 3. PROFIT
 
 Для справки:
