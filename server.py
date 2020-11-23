@@ -86,4 +86,4 @@ thread.start_new_thread(initServer, ())
 
 while True:
     msg = input()
-    clients[0].send('check', callback=lambda self, x: print(x))
+    clients[0].send('check', callback=lambda connection, x: print(x))

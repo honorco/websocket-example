@@ -6,7 +6,7 @@ try:
     import thread
 except ImportError:
     import _thread as thread
-import websocket
+import websocket    # pip install websocket-client
 import json
 
 callbacks: Dict[int, Callable] = {}
@@ -46,13 +46,21 @@ class ClientConnector:
         self.ws.send(json.dumps(res))
 
 
+
+
+
+
+
+
+
+
 class MessageController:
     @staticmethod
-    def create(self, data):
+    def create(connector, data):
         print(data)
 
     @staticmethod
-    def check(self, data):
+    def check(connector, data):
         return 'hello, bro!'
 
 
@@ -64,3 +72,4 @@ connector = ClientConnector('localhost', 8765, {
 while True:
     input()
     connector.send('/messages/get', callback=lambda self, x: print(x))
+    connector.send('/messages/get', 'dataaaa')
